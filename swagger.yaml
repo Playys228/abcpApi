@@ -12,7 +12,7 @@ paths:
     get:
       tags:
         - Search
-      summary: seach product
+      summary: search product
       parameters:
         - $ref: '#/components/parameters/userlogin'
         - $ref: '#/components/parameters/userpsw'
@@ -25,11 +25,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Product'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
   /batch-products:
     post:
       tags:
         - Search
-      summary: batch seach products
+      summary: batch search products
       requestBody:
         content:
           application/x-www-form-urlencoded:
@@ -45,6 +53,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Product'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
   /create-order:
     post:
       tags:
@@ -67,11 +81,17 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Order'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
   /orders-list:
     get:
       tags:
         - Order
-      summary: getiing order list
+      summary: getting order list
       parameters:
         - $ref: '#/components/parameters/userlogin'
         - $ref: '#/components/parameters/userpsw'
@@ -85,72 +105,116 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Order'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
   /shipment-offices:
     get:
       tags:
         - Order
-      summary: getiing order shipment offices
+      summary: getting order shipment offices
       parameters:
         - $ref: '#/components/parameters/userlogin'
         - $ref: '#/components/parameters/userpsw'
       responses:
         '200':
           $ref: '#/components/responses/dictionarySuccess'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
   /shipment-methods:
     get:
       tags:
         - Order
-      summary: getiing order shipment methods
+      summary: getting order shipment methods
       parameters:
         - $ref: '#/components/parameters/userlogin'
         - $ref: '#/components/parameters/userpsw'
       responses:
         '200':
           $ref: '#/components/responses/dictionarySuccess'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
   /shipment-addresses:
     get:
       tags:
         - Order
-      summary: getiing order shipment addresses
+      summary: getting order shipment addresses
       parameters:
         - $ref: '#/components/parameters/userlogin'
         - $ref: '#/components/parameters/userpsw'
       responses:
         '200':
           $ref: '#/components/responses/dictionarySuccess'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
   /payment-methods:
     get:
       tags:
         - Order
-      summary: getiing order payment addresses
+      summary: getting order payment methods
       parameters:
         - $ref: '#/components/parameters/userlogin'
         - $ref: '#/components/parameters/userpsw'
       responses:
         '200':
           $ref: '#/components/responses/dictionarySuccess'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
   /order-statuses:
     get:
       tags:
         - Order
-      summary: getiing order statuses
+      summary: getting order statuses
       parameters:
         - $ref: '#/components/parameters/userlogin'
         - $ref: '#/components/parameters/userpsw'
       responses:
         '200':
           $ref: '#/components/responses/statusesSuccess'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
   /order-positions-statuses:
     get:
       tags:
         - Order
-      summary: getiing order positions statuses
+      summary: getting order positions statuses
       parameters:
         - $ref: '#/components/parameters/userlogin'
         - $ref: '#/components/parameters/userpsw'
       responses:
         '200':
           $ref: '#/components/responses/statusesSuccess'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 components:
   responses:
     dictionarySuccess:
@@ -171,6 +235,46 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/OrderStatuses'
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Invalid request parameters"
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Authentication failed or user is not authorized"
+    NotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Requested resource not found"
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "An unexpected error occurred on the server"
   parameters:
     userlogin:
       name: userlogin
