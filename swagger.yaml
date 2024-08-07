@@ -365,7 +365,7 @@ components:
           items:
             type: object
             properties:
-              name:
+              description:
                 type: string
               number:
                 type: string
