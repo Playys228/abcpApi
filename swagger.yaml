@@ -82,7 +82,11 @@ paths:
                 items:
                   $ref: '#/components/schemas/Order'
         '400':
-          $ref: '#/components/responses/BadRequest'
+          description: Ошибка при создании заказа
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '500':
@@ -215,6 +219,7 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/InternalServerError'
+          
 components:
   responses:
     dictionarySuccess:
@@ -242,9 +247,18 @@ components:
           schema:
             type: object
             properties:
-              error:
+              name:
                 type: string
-                example: "Invalid request parameters"
+                example: "Bad Request"
+              message:
+                type: string
+                example: "error message"
+              code:
+                type: number
+                example: 0
+              status:
+                type: number
+                example: 400
     Unauthorized:
       description: Unauthorized
       content:
@@ -252,9 +266,37 @@ components:
           schema:
             type: object
             properties:
-              error:
+              name:
                 type: string
-                example: "Authentication failed or user is not authorized"
+                example: "Unauthorized"
+              message:
+                type: string
+                example: "Wrong login or password"
+              code:
+                type: number
+                example: 0
+              status:
+                type: number
+                example: 403
+    MethodNotAllowed:
+      description: Method not allowed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                example: "Bad Request"
+              message:
+                type: string
+                example: "Method not allowed"
+              code:
+                type: number
+                example: 0
+              status:
+                type: number
+                example: 400
     NotFound:
       description: Not Found
       content:
@@ -262,9 +304,18 @@ components:
           schema:
             type: object
             properties:
-              error:
+              name:
+                type: string
+                example: "Not found"
+              message:
                 type: string
                 example: "Requested resource not found"
+              code:
+                type: number
+                example: 0
+              status:
+                type: number
+                example: 404
     InternalServerError:
       description: Internal Server Error
       content:
@@ -272,9 +323,18 @@ components:
           schema:
             type: object
             properties:
-              error:
+              name:
                 type: string
-                example: "An unexpected error occurred on the server"
+                example: "Internal server error"
+              message:
+                type: string
+                example: "internal server error occured"
+              code:
+                type: number
+                example: 0
+              status:
+                type: number
+                example: 500
   parameters:
     userlogin:
       name: userlogin
@@ -313,6 +373,66 @@ components:
       schema:
         type: string
   schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          description: Общий статус ответа (0 означает ошибку)
+          example: 0
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorDetail'
+    ErrorDetail:
+      type: object
+      properties:
+        position:
+          type: object
+          description: Описание позиции товара, по которой возникла ошибка
+          properties:
+            description:
+              type: string
+              description: Описание товара
+              example: "Лямбда-зонд"
+            number:
+              type: string
+              description: Номер товара
+              example: "13627101680"
+            brand:
+              type: string
+              description: Бренд товара
+              example: "BMW"
+            quantity:
+              type: integer
+              description: Количество товара
+              example: 1
+            price:
+              type: number
+              format: float
+              description: Цена товара
+              example: 8225
+            comment:
+              type: string
+              description: Комментарий к товару
+              example: "test product"
+            supplierCode:
+              type: string
+              description: Код поставщика
+              example: "sp_246938911"
+        field:
+          type: string
+          description: Поле, в котором возникла ошибка
+          example: "shipmentDate"
+        message:
+          type: string
+          description: Сообщение об ошибке
+          example: "Неверный формат даты"
+        actualPrice:
+          type: number
+          format: float
+          description: Актуальная цена товара (если ошибка связана с ценой)
+          example: 69097
     OrderStatuses:
       type: object
       additionalProperties:
